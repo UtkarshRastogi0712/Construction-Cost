@@ -1,11 +1,12 @@
-import motor.motor_asyncio
+from pymongo import MongoClient
 from bson.objectid import ObjectId
 
-MONGO_HOST = "mongodb://localhost:27017"
-client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_HOST)
-database = client.projects
+CONNECTION_STRING = "mongodb://localhost:27017/"
+client = MongoClient(CONNECTION_STRING)
+db = client['projects']
+  
 
-project_collection = database.get_collection("project_collection")
+project_collection=db["project_collection"]
 
 def project_helper(project) -> dict:
     return {
@@ -15,19 +16,19 @@ def project_helper(project) -> dict:
         "description": project["description"],
     }
 
-async def get_projects():
-    projects=[]
-    async for project in project_collection.find():
-        projects.append(project_helper(project))
-    return projects
+async def get_projects() -> dict:
+    project_list=[]
+    for project in project_collection.find():
+        project_list.append(project_helper(project))
+    return project_list
 
 async def add_project(project_data: dict) -> dict:
-    project = await project_collection.insert_one(project_data)
-    new_project = await project_collection.find_one({"_id": project.inserted_id})
+    project = project_collection.insert_one(project_data)
+    new_project = project_collection.find_one({"_id": project.inserted_id})
     return project_helper(new_project)
 
-async def get_project(id: str) -> dict:
-    project = await project_collection.find_one({"_id": ObjectId(id)})
+async def get_project(name: str) -> dict:
+    project = project_collection.find_one({"name": name})
     if project:
         return project_helper(project)
 

@@ -5,6 +5,15 @@ class ProjectSchema(BaseModel):
     name: str=Field(...)
     start_date: str=Field(...)
     description: str=Field(...)
+    class Config:
+        orm_mode=True
+        schema_example = {
+            "example": {
+                "name": "Something",
+                "start_date": "Something",
+                "description": "Something",
+            }
+        }
 
 class UpdateProjectModel(BaseModel):
     name: Optional[str]
