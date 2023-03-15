@@ -37,3 +37,18 @@ async def get_one_project(name: str):
     if project:
         return ResponseModel(project, "Project retrieved successfully")
     return ErrorResponseModel("An error occured", 404, "Project doesnt exist")
+
+@router.put("/update", response_description="Project details updated")
+async def update_one_project(name: str, req: UpdateProjectModel = Body(...)):
+    req = {k:v for k,v in req.dict().items() if v is not None}
+    updated_project = await update_project(name, req)
+    if updated_project:
+        return ResponseModel(
+            "Project with name {name} updated succesfully",
+            "Project updated"
+        )
+    return ErrorResponseModel(
+        "An error occured",
+        404,
+        "There was an error updating the project",
+    )

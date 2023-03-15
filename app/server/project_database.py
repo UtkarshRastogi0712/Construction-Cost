@@ -32,19 +32,19 @@ async def get_project(name: str) -> dict:
     if project:
         return project_helper(project)
 
-async def update_project(id: str, data: dict):
+async def update_project(name: str, data: dict):
     if len(data)<1:
         return False
-    project = await project_collection.find_one({"_id": ObjectId(id)})
+    project = project_collection.find_one({"name": name})
     if project:
-        updated_project = await project_collection.update_one({"_id": ObjectId(id)}, {"$set": data})
+        updated_project = project_collection.update_one({"name": name}, {"$set": data})
         if updated_project:
             return True
         return False
 
-async def delete_project(id: str):
-    project = await project_collection.find_one({"_id": ObjectId(id)})
+async def delete_project(name: str):
+    project = project_collection.find_one({"name": name})
     if project:
-        await project_collection.delete_one({"_id": ObjectId(id)})
+        await project_collection.delete_one({"name": name})
         return True
     return False
