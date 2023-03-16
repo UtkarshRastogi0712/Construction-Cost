@@ -52,3 +52,17 @@ async def update_one_project(name: str, req: UpdateProjectModel = Body(...)):
         404,
         "There was an error updating the project",
     )
+
+@router.delete("/delete", response_description="Project data deleted")
+async def delete_one_project(name: str):
+    deleted_project = await delete_project(name)
+    if deleted_project:
+        return ResponseModel(
+            "Project with name {name} deleted successfully",
+            "Project deleted"
+        )
+    return ErrorResponseModel(
+        "An error occured",
+        404,
+        "There was an error deleting the project"
+    )

@@ -45,6 +45,6 @@ async def update_project(name: str, data: dict):
 async def delete_project(name: str):
     project = project_collection.find_one({"name": name})
     if project:
-        await project_collection.delete_one({"name": name})
+        project_collection.delete_one({"name": name})
         return True
     return False
