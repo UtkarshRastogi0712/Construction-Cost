@@ -24,12 +24,12 @@ async def get_users():
     return users
 
 async def add_user(user_data: dict) -> dict:
-    user = await user_collection.insert_one(user_data)
-    new_user = await user_collection.find_one({"_id": user.inserted_id})
+    user = user_collection.insert_one(user_data)
+    new_user = user_collection.find_one({"_id": user.inserted_id})
     return user_helper(new_user)
 
 async def get_user(id: str) -> dict:
-    user = await user_collection.find_one({"_id": ObjectId(id)})
+    user = user_collection.find_one({"_id": ObjectId(id)})
     if user:
         return user_helper(user)
 

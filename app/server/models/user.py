@@ -7,6 +7,22 @@ class UserSchema(BaseModel):
     full_name: str=Field(...)
     hashed_password: str=Field(...)
     disabled: str
+    class Config:
+        orm_mode=True
+        schema_example = {
+            "example": {
+                "username": "Something",
+                "email": "Something",
+                "full_name": "Something",
+                "hashed_password": "Something",
+                "disabled": "Something",
+            }
+        }
+
+class UpdateUserModel(BaseModel):
+    username: Optional[str]
+    full_name: Optional[str]
+    disabled: Optional[str]
 
 class Token(BaseModel):
     access_token: str=Field(...)
@@ -14,3 +30,17 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     username: Optional[str]
+
+def ResponseModel(data, message):
+    return {
+        "data": data,
+        "code": 200,
+        "message": message
+    }
+
+def ErrorResponseModel(error, code, message):
+    return {
+        "error": error,
+        "code": code,
+        "message": message
+    }
