@@ -4,6 +4,7 @@ from pydantic import BaseModel, EmailStr, Field
 class ProjectSchema(BaseModel):
     name: str=Field(...)
     start_date: str=Field(...)
+    creator: str=Field(...)
     description: str=Field(...)
     class Config:
         orm_mode=True
@@ -11,6 +12,7 @@ class ProjectSchema(BaseModel):
             "example": {
                 "name": "Something",
                 "start_date": "Something",
+                "creator": "Something",
                 "description": "Something",
             }
         }

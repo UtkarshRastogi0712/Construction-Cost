@@ -1,5 +1,8 @@
 from fastapi import APIRouter, Body
 from fastapi.encoders import jsonable_encoder
+from fastapi import Depends
+from server.models.user import UserSchema
+from server.helper.login import *
 
 from server.project_database import(
     get_projects,
@@ -19,7 +22,8 @@ from server.models.project import(
 router = APIRouter()
 
 @router.post("/add", response_description="Project data added to the database")
-async def add_project_data(project: ProjectSchema = Body(...)):
+async def add_project_data(project: ProjectSchema = Body(...), current_user: UserSchema = Depends(get_current_user)):
+    project.creator=current_user.username
     project = jsonable_encoder(project)
     new_project = await add_project(project)
     return ResponseModel(new_project, "Project added successfully.")

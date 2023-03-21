@@ -12,6 +12,7 @@ def project_helper(project) -> dict:
     return {
         "id": str(project["_id"]),
         "name": project["name"],
+        "creator": project["creator"],
         "start_date": project["start_date"],
         "description": project["description"],
     }

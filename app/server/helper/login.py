@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from typing import Union
 from jose import JWTError, jwt
 from passlib.context import CryptContext
+#import server.user_database as user_db
 
 SECRET_KEY = "09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7"
 ALGORITHM = "HS256"
@@ -22,6 +23,8 @@ fake_users_db = {
         "disabled": False,
     },
 }
+
+#fake_user_db = user_db.get_users()
 
 def verify_password(plain_password, hashed_password):
     return pwd_context.verify(plain_password, hashed_password)
