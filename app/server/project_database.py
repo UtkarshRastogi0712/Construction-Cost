@@ -17,10 +17,11 @@ def project_helper(project) -> dict:
         "description": project["description"],
     }
 
-async def get_projects() -> dict:
+async def get_projects(user: str) -> dict:
     project_list=[]
     for project in project_collection.find():
-        project_list.append(project_helper(project))
+        if project["creator"]==user:
+            project_list.append(project_helper(project))
     return project_list
 
 async def add_project(project_data: dict) -> dict:
@@ -28,24 +29,24 @@ async def add_project(project_data: dict) -> dict:
     new_project = project_collection.find_one({"_id": project.inserted_id})
     return project_helper(new_project)
 
-async def get_project(name: str) -> dict:
+async def get_project(name: str, user: str) -> dict:
     project = project_collection.find_one({"name": name})
-    if project:
+    if project and project["creator"]==user:
         return project_helper(project)
 
-async def update_project(name: str, data: dict):
+async def update_project(name: str, data: dict, user:str):
     if len(data)<1:
         return False
     project = project_collection.find_one({"name": name})
-    if project:
+    if project and project["creator"]==user:
         updated_project = project_collection.update_one({"name": name}, {"$set": data})
         if updated_project:
             return True
         return False
 
-async def delete_project(name: str):
+async def delete_project(name: str, user:str):
     project = project_collection.find_one({"name": name})
-    if project:
+    if project and project["creator"]==user:
         project_collection.delete_one({"name": name})
         return True
     return False

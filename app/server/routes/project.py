@@ -29,23 +29,23 @@ async def add_project_data(project: ProjectSchema = Body(...), current_user: Use
     return ResponseModel(new_project, "Project added successfully.")
 
 @router.get("/showall", response_description="Projects retrieved")
-async def get_all_projects():
-    projects = await get_projects()
+async def get_all_projects( current_user: UserSchema = Depends(get_current_user)):
+    projects = await get_projects(current_user.username)
     if projects:
         return ResponseModel(projects, "Projects retrieved successfully")
     return ResponseModel(projects, "Empty list returned")
 
 @router.get("/showone", response_description="Project retrieved")
-async def get_one_project(name: str):
-    project = await get_project(name)
+async def get_one_project(name: str,  current_user: UserSchema = Depends(get_current_user)):
+    project = await get_project(name, current_user.username)
     if project:
         return ResponseModel(project, "Project retrieved successfully")
     return ErrorResponseModel("An error occured", 404, "Project doesnt exist")
 
 @router.put("/update", response_description="Project details updated")
-async def update_one_project(name: str, req: UpdateProjectModel = Body(...)):
+async def update_one_project(name: str, req: UpdateProjectModel = Body(...),  current_user: UserSchema = Depends(get_current_user)):
     req = {k:v for k,v in req.dict().items() if v is not None}
-    updated_project = await update_project(name, req)
+    updated_project = await update_project(name, req, current_user.username)
     if updated_project:
         return ResponseModel(
             "Project with name {name} updated succesfully",
@@ -58,8 +58,8 @@ async def update_one_project(name: str, req: UpdateProjectModel = Body(...)):
     )
 
 @router.delete("/delete", response_description="Project data deleted")
-async def delete_one_project(name: str):
-    deleted_project = await delete_project(name)
+async def delete_one_project(name: str,  current_user: UserSchema = Depends(get_current_user)):
+    deleted_project = await delete_project(name, current_user.username)
     if deleted_project:
         return ResponseModel(
             "Project with name {name} deleted successfully",
