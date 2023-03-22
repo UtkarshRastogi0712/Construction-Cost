@@ -1,11 +1,12 @@
-import motor.motor_asyncio
+from pymongo import MongoClient
 from bson.objectid import ObjectId
 
-MONGO_HOST = "mongodb://localhost:27017"
-client = motor.motor_asyncio.AsyncIOMotorClient(MONGO_HOST)
-database = client.users
-
-user_collection = database.get_collection("user_collection")
+def db_init():
+    CONNECTION_STRING = "mongodb://localhost:27017/"
+    client = MongoClient(CONNECTION_STRING)
+    db = client['users']
+    user_collection=db["user_collection"]
+    return user_collection
 
 def user_helper(user) -> dict:
     return {
@@ -17,18 +18,21 @@ def user_helper(user) -> dict:
         "disabled": user["disabled"],
     }
 
-async def get_users():
+async def get_users() -> dict:
+    user_collection = db_init()
     users=[]
-    async for user in user_collection.find():
+    for user in user_collection.find():
         users.append(user_helper(user))
     return users
 
 async def add_user(user_data: dict) -> dict:
+    user_collection = db_init()
     user = user_collection.insert_one(user_data)
     new_user = user_collection.find_one({"_id": user.inserted_id})
     return user_helper(new_user)
 
 async def get_user(id: str) -> dict:
+    user_collection = db_init()
     user = user_collection.find_one({"_id": ObjectId(id)})
     if user:
         return user_helper(user)

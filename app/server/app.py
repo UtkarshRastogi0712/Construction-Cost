@@ -1,8 +1,10 @@
-from fastapi import FastAPI, Depends, HTTPException, status
+from fastapi import FastAPI, Depends, HTTPException, status, Body
+from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from server.models.user import UserSchema
+from server.models.user import UserSchema, ResponseModel, ErrorResponseModel
 from server.routes.project import router as ProjectRouter
 from server.helper.login import *
+from server.user_database import add_user, get_users
 
 app = FastAPI()
 app.include_router(ProjectRouter, tags=["Project"], prefix="/project")
@@ -15,7 +17,7 @@ async def read_root(token: str = Depends(oauth2_scheme)):
 
 @app.post("/token", response_model=Token)
 async def login(form_data: OAuth2PasswordRequestForm = Depends()):
-    user = authenticate_user(fake_users_db, form_data.username, form_data.password)
+    user = await authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -26,6 +28,18 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
         data={"sub": user.username},expires_delta=access_token_expires
     )
     return {"access_token": access_token, "token_type": "bearer"}
+
+@app.post("/user/register")
+async def add_user_data(user: UserSchema = Body(...)):
+    user.hashed_password=get_hashed_password(user.hashed_password)
+    user = jsonable_encoder(user)
+    new_user = await add_user(user)
+    if new_user:
+        return ResponseModel(new_user, "New user added successfully.")
+    return ErrorResponseModel(
+        "An error occured",
+        404,
+        "There was an error adding the user",)
 
 @app.get("/users/me", response_model=UserSchema)
 async def read_user(current_user: UserSchema = Depends(get_current_user)):
