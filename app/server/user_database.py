@@ -39,21 +39,3 @@ async def get_user(id: str) -> dict:
     user = user_collection.find_one({"_id": ObjectId(id)})
     if user:
         return user_helper(user)
-
-'''
-async def update_project(id: str, data: dict):
-    if len(data)<1:
-        return False
-    project = await project_collection.find_one({"_id": ObjectId(id)})
-    if project:
-        updated_project = await project_collection.update_one({"_id": ObjectId(id)}, {"$set": data})
-        if updated_project:
-            return True
-        return False
-
-async def delete_project(id: str):
-    project = await project_collection.find_one({"_id": ObjectId(id)})
-    if project:
-        await project_collection.delete_one({"_id": ObjectId(id)})
-        return True
-    return False'''

@@ -1,11 +1,18 @@
-from typing import Optional
+from typing import Optional, Literal
 from pydantic import BaseModel, EmailStr, Field
+
+class Item(BaseModel):
+    name: str=Field(...)
+    price: float=Field(...)
+    quantity: int=Field(...)
+    category: Literal['Construction','Electrical','Plumbing','Labour','Flooring and Tiling','Miscellaneous']
 
 class ProjectSchema(BaseModel):
     name: str=Field(...)
     start_date: str=Field(...)
     creator: str=Field(...)
     description: str=Field(...)
+    items: list[Item]
     class Config:
         orm_mode=True
         schema_example = {

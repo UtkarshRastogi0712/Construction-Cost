@@ -3,11 +3,13 @@ from fastapi.encoders import jsonable_encoder
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from server.models.user import UserSchema, ResponseModel, ErrorResponseModel
 from server.routes.project import router as ProjectRouter
+from server.routes.items import router as ItemRouter
 from server.helper.login import *
 from server.user_database import add_user, get_users
 
 app = FastAPI()
 app.include_router(ProjectRouter, tags=["Project"], prefix="/project")
+app.include_router(ItemRouter, tags=["Item"], prefix="/item")
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 

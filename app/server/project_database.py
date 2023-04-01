@@ -15,6 +15,7 @@ def project_helper(project) -> dict:
         "creator": project["creator"],
         "start_date": project["start_date"],
         "description": project["description"],
+        "items": project["items"],
     }
 
 async def get_projects(user: str) -> dict:
