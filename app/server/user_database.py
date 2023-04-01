@@ -27,6 +27,9 @@ async def get_users() -> dict:
 
 async def add_user(user_data: dict) -> dict:
     user_collection = db_init()
+    already_exists = user_collection.find_one({"username": user_data["username"]})
+    if already_exists:
+        return None
     user = user_collection.insert_one(user_data)
     new_user = user_collection.find_one({"_id": user.inserted_id})
     return user_helper(new_user)
