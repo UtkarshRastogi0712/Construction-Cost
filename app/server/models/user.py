@@ -24,6 +24,11 @@ class UpdateUserModel(BaseModel):
     full_name: Optional[str]
     disabled: Optional[str]
 
+class ChangePassword(BaseModel):
+    username: str=Field(...)
+    old_password: str=Field(...)
+    new_password: str=Field(...)
+
 class Token(BaseModel):
     access_token: str=Field(...)
     token_type: str=Field(...)

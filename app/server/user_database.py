@@ -39,3 +39,12 @@ async def get_user(id: str) -> dict:
     user = user_collection.find_one({"_id": ObjectId(id)})
     if user:
         return user_helper(user)
+    
+async def change_password(new_password: str, username: str) -> dict:
+    user_collection = db_init()
+    user = user_collection.find_one({"username":username})
+    if user:
+        data = {"hashed_password" : new_password}
+        new_user = user_collection.update_one({"username":username},{"$set" : data})
+        if new_user:
+            return True
