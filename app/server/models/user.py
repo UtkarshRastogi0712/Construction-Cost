@@ -6,16 +6,16 @@ class UserSchema(BaseModel):
     email: str=Field(...)
     full_name: str=Field(...)
     hashed_password: str=Field(...)
-    disabled: str
+    disabled: bool
     class Config:
         orm_mode=True
         schema_example = {
             "example": {
-                "username": "Something",
-                "email": "Something",
-                "full_name": "Something",
-                "hashed_password": "Something",
-                "disabled": "Something",
+                "username": "Valid username",
+                "email": "Valid email of the user",
+                "full_name": "Full Name of the User",
+                "hashed_password": "Encoded password",
+                "disabled": False,
             }
         }
 

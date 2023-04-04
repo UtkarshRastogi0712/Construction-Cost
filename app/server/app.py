@@ -44,5 +44,5 @@ async def add_user_data(user: UserSchema = Body(...)):
         "There was an error adding the user",)
 
 @app.get("/users/me", response_model=UserSchema)
-async def read_user(current_user: UserSchema = Depends(get_current_user)):
+async def read_user(current_user: UserSchema = Depends(get_current_active_user)):
     return current_user
