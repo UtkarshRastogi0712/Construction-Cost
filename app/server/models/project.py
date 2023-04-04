@@ -1,5 +1,6 @@
 from typing import Optional, Literal
 from pydantic import BaseModel, EmailStr, Field
+from datetime import datetime
 
 class Item(BaseModel):
     name: str=Field(...)
@@ -9,8 +10,8 @@ class Item(BaseModel):
 
 class ProjectSchema(BaseModel):
     name: str=Field(...)
-    start_date: str=Field(...)
-    creator: str=Field(...)
+    start_date: datetime
+    creator: str
     description: str=Field(...)
     items: list[Item]
     class Config:
