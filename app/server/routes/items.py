@@ -60,6 +60,23 @@ async def get_all_items(project_name: str, current_user: UserSchema = Depends(ge
         "Project not found",
     )
 
+@router.get("/statement", response_description="Final statement")
+async def get_statement(project_name: str, current_user: UserSchema = Depends(get_current_user)):
+    project = await get_project(project_name, current_user.username)
+    if project:
+        item_list=None
+        if "items" in project.keys():
+            item_list=project["items"]
+        else:
+            item_list=[]
+            
+        return ResponseModel(item_list, "Statement retrieved successfully")
+    return ErrorResponseModel(
+        "An error occured",
+        404,
+        "Project not found",
+    )
+
 @router.delete("/delete", response_description="Item data deleted")
 async def delete_item_data(project_name: str, item_index: int, current_user: UserSchema = Depends(get_current_user)):
     project = await get_project(project_name, current_user.username)
