@@ -3,6 +3,7 @@ from fastapi.encoders import jsonable_encoder
 from fastapi import Depends
 from server.models.user import UserSchema
 from server.helper.login import *
+from server.helper.statement import *
 
 from server.project_database import(
     get_project,
@@ -69,8 +70,8 @@ async def get_statement(project_name: str, current_user: UserSchema = Depends(ge
             item_list=project["items"]
         else:
             item_list=[]
-            
-        return ResponseModel(item_list, "Statement retrieved successfully")
+        statement=get_statement_details(item_list)
+        return ResponseModel(statement, "Statement retrieved successfully")
     return ErrorResponseModel(
         "An error occured",
         404,
