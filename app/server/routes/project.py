@@ -24,9 +24,15 @@ router = APIRouter()
 @router.post("/add", response_description="Project data added to the database")
 async def add_project_data(project: ProjectSchema = Body(...), current_user: UserSchema = Depends(get_current_user)):
     project.creator=current_user.username
-    project = jsonable_encoder(project)
-    new_project = await add_project(project)
-    return ResponseModel(new_project, "Project added successfully.")
+    projects = await get_projects(current_user.username)
+    names=[]
+    for i in projects:
+        names.append(i["name"])
+    if project.name not in names:
+        project = jsonable_encoder(project)
+        new_project = await add_project(project)
+        return ResponseModel(new_project, "Project added successfully.")
+    return ErrorResponseModel("An error occured", 404, "Project already exists")
 
 @router.get("/showall", response_description="Projects retrieved")
 async def get_all_projects( current_user: UserSchema = Depends(get_current_user)):

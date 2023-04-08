@@ -3,10 +3,10 @@ from pydantic import BaseModel, EmailStr, Field
 from datetime import datetime
 
 class Item(BaseModel):
-    name: str=Field(...)
-    price: float=Field(...)
-    quantity: int=Field(...)
-    category: Literal['Construction','Electrical','Plumbing','Labour','Flooring and Tiling','Miscellaneous']
+    name: str
+    price: float
+    quantity: int
+    category: Optional[Literal['Construction','Electrical','Plumbing','Labour','Flooring and Tiling','Miscellaneous']]
 
 class ProjectSchema(BaseModel):
     name: str=Field(...)
