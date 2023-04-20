@@ -13,7 +13,8 @@ class ProjectSchema(BaseModel):
     start_date: datetime
     creator: str
     description: str=Field(...)
-    items: list[Item]
+    items: Optional[list[Item]] = None
+    access: Optional[list[str]] = None
     class Config:
         orm_mode=True
         schema_example = {
@@ -26,8 +27,9 @@ class ProjectSchema(BaseModel):
         }
 
 class UpdateProjectModel(BaseModel):
-    name: Optional[str]
-    description: Optional[str]
+    name: Optional[str] = None
+    description: Optional[str] = None
+    access: Optional[list[str]] = None
 
 def ResponseModel(data, message):
     return {
