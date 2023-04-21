@@ -1,7 +1,10 @@
 from pymongo import MongoClient
 from bson.objectid import ObjectId
+from dotenv import load_dotenv
+import os
 
-CONNECTION_STRING = "mongodb://localhost:27017/"
+load_dotenv()
+CONNECTION_STRING = os.getenv("CONNECTION_STRING")
 client = MongoClient(CONNECTION_STRING)
 db = client['projects']
   
